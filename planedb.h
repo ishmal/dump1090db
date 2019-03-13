@@ -16,7 +16,7 @@
  * Add more later.
  *
  * The MIT License (MIT)
- * Copyright (c) 2013 Bob Jamison
+ * Copyright (c) 2019 Bob Jamison
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and 
  * associateddocumentation files (the "Software"), to deal in the Software without restriction, 

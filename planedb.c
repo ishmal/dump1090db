@@ -13,7 +13,7 @@
  * Add more later.
  *
  * The MIT License (MIT)
- * Copyright (c) 2014 Bob Jamison
+ * Copyright (c) 2019 Bob Jamison
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associateddocumentation files (the "Software"), to deal in the Software without restriction,
@@ -39,6 +39,7 @@
 #include <stdarg.h>
 
 #include "planedb.h"
+
 #ifndef TRUE
 #define TRUE  1
 #endif
@@ -153,7 +154,15 @@ static char *pickup(char *str, int p0, int p1)
  */
 static char *typeTable[] = {
 /*0*/ "None",
-/*1*/ "Glider",/*2*/ "Balloon",/*3*/ "Blimp/Dirigible",/*4*/ "Fixed wing single engine",/*5*/ "Fixed wing multi engine",/*6*/ "Rotorcraft",/*7*/ "Weight-shift-control",/*8*/ "Powered Parachute",/*9*/ "Gyroplane"
+/*1*/ "Glider",
+/*2*/ "Balloon",
+/*3*/ "Blimp/Dirigible",
+/*4*/ "Fixed wing single engine",
+/*5*/ "Fixed wing multi engine",
+/*6*/ "Rotorcraft",
+/*7*/ "Weight-shift-control",
+/*8*/ "Powered Parachute",
+/*9*/ "Gyroplane"
 };
 
 
@@ -197,10 +206,11 @@ static int typeInfoPrint(TypeInfo *ti)
 {
     if (!ti)
         printf("None\n");
-    if (ti->manufacturer)  printf("  Manufacturer   : %s\n", ti->manufacturer);
-    if (ti->model)         printf("  Model name     : %s\n", ti->model);
-                           printf("  Type           : %d - %s\n", ti->type, typeTable[ti->type]);
-                           printf("  Seats          : %d\n", ti->nrseats);
+	printf("  ## Type\n");
+    if (ti->manufacturer)  printf("    Manufacturer   : %s\n", ti->manufacturer);
+    if (ti->model)         printf("    Model name     : %s\n", ti->model);
+                           printf("    Type           : %d - %s\n", ti->type, typeTable[ti->type]);
+                           printf("    Seats          : %d\n", ti->nrseats);
 
     return TRUE;
 }
@@ -234,11 +244,11 @@ static TypeInfo *type_lookup(PlaneDb *db, int id)
  * Load TypeInfo data from a file.  This is currently coded for the FAA
  * ACRFTREF.txt file
  * @param db this
- * @param fname the name of the file to read
  * @return TRUE if successful, else FALSE
  */
-static int load_types(PlaneDb *db, char *fname)
+static int load_types(PlaneDb *db)
 {
+	char *fname = "ACFTREF.txt";
     FILE *f = fopen(fname, "r");
     if (!f)
         {
@@ -325,9 +335,10 @@ int planeInfoPrint(PlaneDb *db, PlaneInfo *pi)
 {
     if (!pi)
         printf("None\n");
-    if (pi->nnum)       printf("  N-Number       : %s\n", pi->nnum);
-    if (pi->registrant) printf("  Registrant     : %s\n", pi->registrant);
-    if (pi->model)      printf("  Model          : %d\n", pi->model);
+	printf("  ## Registration\n");
+    if (pi->nnum)       printf("    N-Number       : %s\n", pi->nnum);
+    if (pi->registrant) printf("    Registrant     : %s\n", pi->registrant);
+    if (pi->model)      printf("    Model          : %d\n", pi->model);
     TypeInfo *ti = type_lookup(db, pi->model);
     if (!ti)
         printf("No model info\n");
@@ -341,11 +352,11 @@ int planeInfoPrint(PlaneDb *db, PlaneInfo *pi)
  * Load PlaneInfo data from a file.  This is currently coded for the FAA
  * MASTER.txt file
  * @param db this
- * @param fname the name of the file to read
  * @return TRUE if successful, else FALSE
  */
-static int load_planes(PlaneDb *db, char *fname)
+static int load_planes(PlaneDb *db)
 {
+	char *fname = "MASTER.txt";
     FILE *f = fopen(fname, "r");
     if (!f)
          {
@@ -406,12 +417,12 @@ PlaneDb *planedb_init()
         return NULL;
     db->types  = (TypeInfo *)0;
     db->planes = (PlaneInfo *)0;
-    if (!load_types(db, "ACFTREF.txt"))
+    if (!load_types(db))
         {
         planedb_close(db);
         return NULL;
         }
-    if (!load_planes(db, "MASTER.txt"))
+    if (!load_planes(db))
         {
         planedb_close(db);
         return NULL;

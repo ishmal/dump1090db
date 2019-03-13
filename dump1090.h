@@ -65,6 +65,9 @@
     #include "anet.h"
 #endif
 
+// Add our FAA db
+#include "planedb.h"
+
 // ============================= #defines ===============================
 //
 // If you have a valid coaa.h, these values will come from it. If not,
@@ -370,6 +373,8 @@ struct {                             // Internal state
 
     unsigned int stat_blocks_processed;
     unsigned int stat_blocks_dropped;
+	// Add the db here
+	PlaneDb *db; 
 } Modes;
 
 // The struct we use to store information about a decoded message.

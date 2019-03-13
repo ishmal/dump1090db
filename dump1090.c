@@ -29,6 +29,7 @@
 //
 #include "coaa.h"
 #include "dump1090.h"
+#include "planedb.h"
 //
 // ============================= Utility functions ==========================
 //
@@ -187,6 +188,8 @@ void modesInit(void) {
 
     // Prepare error correction tables
     modesInitErrorInfo();
+
+	Modes.db = planedb_init();
 }
 //
 // =============================== RTLSDR handling ==========================
@@ -889,6 +892,7 @@ int main(int argc, char **argv) {
     if (Modes.filename == NULL) {
         rtlsdr_cancel_async(Modes.dev);  // Cancel rtlsdr_read_async will cause data input thread to terminate cleanly
         rtlsdr_close(Modes.dev);
+		planedb_close(Modes.db);
     }
     pthread_cond_destroy(&Modes.data_cond);     // Thread cleanup
     pthread_mutex_destroy(&Modes.data_mutex);

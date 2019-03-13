@@ -1419,6 +1419,12 @@ void displayModesMessage(struct modesMessage *mm) {
         printf("DF %d: Unknown DF Format.\n", mm->msgtype);
     }
 
+	char icao[7];  // PLANEDB
+	snprintf(icao, 7, "%06x", mm->addr);
+	PlaneInfo *pi = planedb_lookup(Modes.db, icao);
+	if (pi)
+		planeInfoPrint(Modes.db, pi);
+
     printf("\n");
 }
 //
